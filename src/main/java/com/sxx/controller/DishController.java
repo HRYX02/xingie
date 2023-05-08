@@ -91,7 +91,7 @@ public class DishController {
             dish.setStatus(1);
             dishService.updateById(dish);
         });
-        return R.success("停售成功");
+        return R.success("起售成功");
     }
     @DeleteMapping
     public R<String> delete(@RequestParam("ids") List<String> ids){

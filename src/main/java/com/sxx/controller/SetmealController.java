@@ -27,13 +27,13 @@ public class SetmealController {
     @Autowired
     private SetmealService setmealService;
     @PostMapping
-    public R<String> save(@RequestBody SetmealDto setmealDto){
+    public R<String> save(@RequestBody SetmealDto setmealDto) {
         log.info(setmealDto.toString());
         setmealService.saveSetmealWithDish(setmealDto);
         return R.success("添加成功");
     }
     @GetMapping("/page")
-    public R<Page<SetmealDto>> page(int page,int pageSize,String name){
+    public R<Page<SetmealDto>> page(int page,int pageSize,String name) {
         log.info(page+pageSize+name);
         Page<Setmeal> pageInfo = new Page<>(page,pageSize);
         Page<SetmealDto> setmealDtoPage = new Page<>();
@@ -54,5 +54,41 @@ public class SetmealController {
         }).collect(Collectors.toList());
         setmealDtoPage.setRecords(list);
         return R.success(setmealDtoPage);
+    }
+    @DeleteMapping
+    public R<String> delete(@RequestParam("ids") List<String> ids) {
+        setmealService.removeSetmealWithDish(ids);
+        return R.success("删除成功");
+    }
+    @PostMapping("/status/0")
+    public R<String> prohibit(@RequestParam("ids") List<String> ids) {
+        ids.stream().forEach((id) -> {
+            Setmeal setmeal = new Setmeal();
+            setmeal.setId(Long.parseLong(id));
+            setmeal.setStatus(0);
+            setmealService.updateById(setmeal);
+        });
+        return R.success("停售成功");
+    }
+    @PostMapping("/status/1")
+    public R<String> open(@RequestParam("ids") List<String> ids) {
+        ids.stream().forEach((id) -> {
+            Setmeal setmeal = new Setmeal();
+            setmeal.setId(Long.parseLong(id));
+            setmeal.setStatus(1);
+            setmealService.updateById(setmeal);
+        });
+        return R.success("起售成功");
+    }
+    @GetMapping("/{id}")
+    public R<SetmealDto> get(@PathVariable Long id){
+        SetmealDto setmealDto = setmealService.getSetmealWithDish(id);
+        return R.success(setmealDto);
+    }
+    @PutMapping
+    public R<String> update(@RequestBody SetmealDto setmealDto){
+        log.info(setmealDto.toString());
+        setmealService.updateSetmealWithDish(setmealDto);
+        return R.success("修改成功");
     }
 }
