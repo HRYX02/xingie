@@ -18,5 +18,6 @@ mybatis-plus:
       logic-delete-value: 1
       logic-not-delete-value: 0
 
+# 图片的存放位置
 picture:
   path: D:\Project\reggie\picture\

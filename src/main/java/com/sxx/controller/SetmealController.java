@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * @author SxxStar
+ * @description 套餐管理 = 分类管理 + 菜品管理
+ */
 @Slf4j
 @RestController
 @RequestMapping("/setmeal")
@@ -26,25 +30,36 @@ public class SetmealController {
     private CategoryService categoryService;
     @Autowired
     private SetmealService setmealService;
+
+    /**
+     * @author SxxStar
+     * @description 新增套餐,调用自定义方法
+     */
     @PostMapping
     public R<String> save(@RequestBody SetmealDto setmealDto) {
-        log.info(setmealDto.toString());
         setmealService.saveSetmealWithDish(setmealDto);
         return R.success("添加成功");
     }
+
+    /**
+     * @author SxxStar
+     * @description 套餐列表,调用自定义方法
+     * @question 为什么不封装在Service方法中? -> 因为CategoryService和SetmealService就互相依赖了
+     */
     @GetMapping("/page")
     public R<Page<SetmealDto>> page(int page,int pageSize,String name) {
-        log.info(page+pageSize+name);
         Page<Setmeal> pageInfo = new Page<>(page,pageSize);
         Page<SetmealDto> setmealDtoPage = new Page<>();
         LambdaQueryWrapper<Setmeal> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(StringUtils.isNotEmpty(name),Setmeal::getName,name);
         setmealService.page(pageInfo,queryWrapper);
 
+        // 对象拷贝，忽略records属性因为数据要进行改变
         BeanUtils.copyProperties(pageInfo,setmealDtoPage,"records");
         List<Setmeal> records = pageInfo.getRecords();
         List<SetmealDto> list = records.stream().map((record) -> {
-            //TODO 不仅需要对page进行copy，还需要对套餐进行copy
+
+            // 不仅需要对page进行copy，还需要对套餐进行copy
             SetmealDto setmealDto = new SetmealDto();
             BeanUtils.copyProperties(record,setmealDto);
             Long categoryId = record.getCategoryId();
@@ -55,11 +70,19 @@ public class SetmealController {
         setmealDtoPage.setRecords(list);
         return R.success(setmealDtoPage);
     }
+
+    /**
+     * @description 删除套餐，有可能单个删除有可能批量删除，所以接收的参数为数组
+     */
     @DeleteMapping
     public R<String> delete(@RequestParam("ids") List<String> ids) {
         setmealService.removeSetmealWithDish(ids);
         return R.success("删除成功");
     }
+
+    /**
+     * @description 修改状态，有可能单个修改有可能批量修改，所以接收的参数为数组
+     */
     @PostMapping("/status/0")
     public R<String> prohibit(@RequestParam("ids") List<String> ids) {
         ids.stream().forEach((id) -> {
@@ -70,6 +93,10 @@ public class SetmealController {
         });
         return R.success("停售成功");
     }
+
+    /**
+     * @description 修改状态，有可能单个修改有可能批量修改，所以接收的参数为数组
+     */
     @PostMapping("/status/1")
     public R<String> open(@RequestParam("ids") List<String> ids) {
         ids.stream().forEach((id) -> {
@@ -87,7 +114,6 @@ public class SetmealController {
     }
     @PutMapping
     public R<String> update(@RequestBody SetmealDto setmealDto){
-        log.info(setmealDto.toString());
         setmealService.updateSetmealWithDish(setmealDto);
         return R.success("修改成功");
     }

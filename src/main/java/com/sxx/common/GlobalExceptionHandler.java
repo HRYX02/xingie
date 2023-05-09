@@ -10,6 +10,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 
 /**
  * @author TEIC-Skills
+ * @description 全局异常异常
  */
 
 @ControllerAdvice(annotations = {RestController.class})
@@ -17,6 +18,11 @@ import java.sql.SQLIntegrityConstraintViolationException;
 @Slf4j
 public class GlobalExceptionHandler {
 
+    /**
+     * @author TEIC-Skills
+     * @description 处理SQL表数据唯一异常
+     * @exception SQLIntegrityConstraintViolationException
+     */
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
     public R<String> exceptionHandler(SQLIntegrityConstraintViolationException ex){
         String message = ex.getMessage();
@@ -29,6 +35,11 @@ public class GlobalExceptionHandler {
         return R.error("未知错误");
     }
 
+    /**
+     * @author TEIC-Skills
+     * @description 处理自定义异常，一旦有异常便向前端返回bx.getMessage()
+     * @exception BusinessException
+     */
     @ExceptionHandler(BusinessException.class)
     public R<String> exceptionHandler(BusinessException bx){
         return R.error(bx.getMessage());

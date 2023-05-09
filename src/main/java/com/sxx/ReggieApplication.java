@@ -6,11 +6,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-//过滤器生效注解
-@ServletComponentScan
-@SpringBootApplication
+/**
+ * @author SxxStar
+ * @ServletComponentScan 过滤器生效注解
+ * @EnableTransactionManagement 开启事务
+ */
 @Slf4j
+@ServletComponentScan
 @EnableTransactionManagement
+@SpringBootApplication
 public class ReggieApplication {
 
     public static void main(String[] args) {

@@ -16,11 +16,19 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * @author SxxStar
+ * @description 套餐管理的实现类
+ */
 @Service
 public class SetmealServiceImpl extends ServiceImpl<SetmealDao, Setmeal> implements SetmealService {
 
     @Autowired
     private SetmealDishService setmealDishService;
+
+    /**
+     * @description setmealDto = setmeal + setmealDish所以需要将setmealDto的SetmealDishes提取出来并将setmeal的id赋值给SetmealDishes的setmealId
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void saveSetmealWithDish(SetmealDto setmealDto) {
@@ -34,6 +42,9 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealDao, Setmeal> impleme
         setmealDishService.saveBatch(setmealDishes);
     }
 
+    /**
+     * @description 删除套餐的同时需要将套餐中对应的菜品删除
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void removeSetmealWithDish(List<String> ids) {
@@ -45,6 +56,9 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealDao, Setmeal> impleme
         });
     }
 
+    /**
+     * @description setmeal + setmealDish = setmealDto
+     */
     @Override
     public SetmealDto getSetmealWithDish(Long id) {
         SetmealDto setmealDto = new SetmealDto();
@@ -56,7 +70,10 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealDao, Setmeal> impleme
         setmealDto.setSetmealDishes(list);
         return setmealDto;
     }
-    
+
+    /**
+     * @description 修改套餐前需要将原来套餐中对应的菜品删除，再添加新的菜品
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateSetmealWithDish(SetmealDto setmealDto){
