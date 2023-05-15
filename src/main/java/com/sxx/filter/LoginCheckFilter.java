@@ -34,6 +34,9 @@ public class LoginCheckFilter implements Filter {
           "/employee/login",
           "/employee/logout",
           "/backend/**",
+          "/front/**",
+          "/user/sendMsg",
+          "/user/login"
         };
         String requestURI = request.getRequestURI();
         if (check(urls,requestURI)) {
@@ -44,6 +47,13 @@ public class LoginCheckFilter implements Filter {
         if (request.getSession().getAttribute("employeeResult") != null){
             //如果有登录账户的id则将此id设置为进程id
             BaseContext.setCurrentId((Long)request.getSession().getAttribute("employeeResult"));
+            log.info("用户已登录");
+            filterChain.doFilter(request,response);
+            return;
+        }
+        if (request.getSession().getAttribute("userResult") != null){
+            //如果有登录账户的id则将此id设置为进程id
+            BaseContext.setCurrentId((Long)request.getSession().getAttribute("userResult"));
             log.info("用户已登录");
             filterChain.doFilter(request,response);
             return;

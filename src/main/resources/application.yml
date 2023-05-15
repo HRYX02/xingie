@@ -1,12 +1,12 @@
 server:
-  port: 8080
+  port: 80
 spring:
   datasource:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:33068/reggie
+      url: jdbc:mysql://localhost:3306/reggie
       username: root
-      password: Abcd@1234
+      password: Sxx15963559164
   application:
     name: reggie
 mybatis-plus:
@@ -20,4 +20,4 @@ mybatis-plus:
 
 # 图片的存放位置
 picture:
-  path: D:\Project\reggie\picture\
+  path: E:\project\itheima\reggie\picture\

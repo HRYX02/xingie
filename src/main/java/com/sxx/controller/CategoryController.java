@@ -49,7 +49,7 @@ public class CategoryController {
     @GetMapping("list")
     public R<List<Category>> list(Category category){
         LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Category::getType,category.getType());
+        queryWrapper.eq(category.getType() != null,Category::getType,category.getType());
         List<Category> list = categoryService.list(queryWrapper);
         return R.success(list);
     }
