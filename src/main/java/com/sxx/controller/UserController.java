@@ -48,9 +48,6 @@ public class UserController {
             // 需要将生成的验证码保存到Session
             session.setAttribute(phone,code);
 
-            // 将生成的验证码缓存到Redis中并设置有效期5分钟
-//            redisTemplate.opsForValue().set(phone, code,5, TimeUnit.MINUTES);
-
             return R.success("发送成功");
         }
         return R.error("发送失败");
@@ -69,9 +66,6 @@ public class UserController {
         // 从Session中获取保存的验证码
         String codeInSession = (String)session.getAttribute(phone);
 
-        // 从Redis中获取缓存的验证码
-//        String codeInSession = (String) redisTemplate.opsForValue().get(phone);
-
         // 进行验证码的比对（页面提交的验证码和Session中保存的验证码比对）
         if (codeInSession != null && codeInSession.equals(code)) {
             // 如果能够比对成功，说明登录成功
@@ -86,8 +80,6 @@ public class UserController {
             }
             session.setAttribute("userResult",one.getId());
 
-            //如果用户登录成功，删除Redis中缓存的验证码
-//            redisTemplate.delete(phone);
 
             return R.success(one);
         }
