@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author SHIXINXI
@@ -42,11 +43,8 @@ public class UserController {
             // 生成随机的4位验证码
             String code = ValidateCodeUtils.generateValidateCode4String(4).toString();
             log.info("得到的验证码："+code);
-            // 调用阿里云提供的短语服务API完成发送
-            // SMSUtils.sendMessage("学习瑞吉外卖","SMS_460770006",phone,code);
-
-            // 需要将生成的验证码保存到Session
-            session.setAttribute(phone,code);
+            // 将生成的验证码缓存到Redis中并设置有效期5分钟
+            redisTemplate.opsForValue().set(phone, code,5, TimeUnit.MINUTES);
 
             return R.success("发送成功");
         }
@@ -63,8 +61,9 @@ public class UserController {
         String phone = user.get("phone").toString();
         // 获取验证码
         String code = user.get("code").toString();
-        // 从Session中获取保存的验证码
-        String codeInSession = (String)session.getAttribute(phone);
+
+        // 从Redis中获取缓存的验证码
+        String codeInSession = (String) redisTemplate.opsForValue().get(phone);
 
         // 进行验证码的比对（页面提交的验证码和Session中保存的验证码比对）
         if (codeInSession != null && codeInSession.equals(code)) {
@@ -80,6 +79,8 @@ public class UserController {
             }
             session.setAttribute("userResult",one.getId());
 
+            //如果用户登录成功，删除Redis中缓存的验证码
+            redisTemplate.delete(phone);
 
             return R.success(one);
         }
