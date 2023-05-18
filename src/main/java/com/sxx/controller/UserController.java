@@ -43,12 +43,6 @@ public class UserController {
             // 生成随机的4位验证码
             String code = ValidateCodeUtils.generateValidateCode4String(4).toString();
             log.info("得到的验证码："+code);
-            // 调用阿里云提供的短语服务API完成发送
-            // SMSUtils.sendMessage("学习瑞吉外卖","SMS_460770006",phone,code);
-
-            // 需要将生成的验证码保存到Session
-//            session.setAttribute(phone,code);
-
             // 将生成的验证码缓存到Redis中并设置有效期5分钟
             redisTemplate.opsForValue().set(phone, code,5, TimeUnit.MINUTES);
 
@@ -67,8 +61,6 @@ public class UserController {
         String phone = user.get("phone").toString();
         // 获取验证码
         String code = user.get("code").toString();
-        // 从Session中获取保存的验证码
-//        String codeInSession = (String)session.getAttribute(phone);
 
         // 从Redis中获取缓存的验证码
         String codeInSession = (String) redisTemplate.opsForValue().get(phone);
