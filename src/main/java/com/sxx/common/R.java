@@ -1,6 +1,8 @@
 package com.sxx.common;
 
 import lombok.Data;
+
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,7 +11,7 @@ import java.util.Map;
  * @description 前后端交互的JSON
  */
 @Data
-public class R<T> {
+public class R<T> implements Serializable {
 
     /**
      * @description 编码：1成功，0和其它数字为失败
