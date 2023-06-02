@@ -11,10 +11,10 @@
     </parent>
 
     <groupId>com.sxx</groupId>
-    <artifactId>reggie</artifactId>
+    <artifactId>xingie</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>reggie</name>
-    <description>reggie</description>
+    <name>xingie</name>
+    <description>xingie</description>
 
     <properties>
         <java.version>1.8</java.version>
