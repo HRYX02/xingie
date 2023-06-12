@@ -3,6 +3,19 @@ server:
 spring:
   application:
     name: reggie
+  mail:
+    host: smtp.163.com
+    username: 15963559164@163.com
+    password: XCOJRXVPYYJBRTCN
+    properties:
+      smtp:
+        auth: true
+        mail:
+          smtp:
+            auth: true
+            starttls:
+              enable: true
+              required: true
   datasource:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver

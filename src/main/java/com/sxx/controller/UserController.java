@@ -8,7 +8,10 @@ import com.sxx.utils.ValidateCodeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +33,12 @@ import java.util.concurrent.TimeUnit;
 public class UserController {
 
     @Autowired
+    private JavaMailSender jms;
+
+    @Value("${spring.mail.username}")
+    private String email;
+
+    @Autowired
     public UserService userService;
 
     @Autowired
@@ -43,6 +52,16 @@ public class UserController {
             // 生成随机的4位验证码
             String code = ValidateCodeUtils.generateValidateCode4String(4).toString();
             log.info("得到的验证码："+code);
+
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(email);
+            message.setTo("2291874995@qq.com");
+            // 标题
+            message.setSubject("验证码");
+            // 内容
+            message.setText("您的验证码为："+code);
+            jms.send(message);
+
             // 将生成的验证码缓存到Redis中并设置有效期5分钟
             redisTemplate.opsForValue().set(phone, code,5, TimeUnit.MINUTES);
 
