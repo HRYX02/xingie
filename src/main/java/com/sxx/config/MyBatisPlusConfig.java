@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
  * @description MP插件配置
  * @Configuration 配置类注解
  */
-
+@Bean
 @Configuration
 public class MyBatisPlusConfig {
     /**
